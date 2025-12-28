@@ -13,7 +13,7 @@ let _instance;
 let globalPk;
 let globalSk;
 
-const JSON_RPC = "https://fhenode.fhenix.io/new/evm";
+const JSON_RPC = "https://fhenode.luxfhe.io/new/evm";
 
 const generateKey = async () => {
   await _sodium.ready;

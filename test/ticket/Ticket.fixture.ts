@@ -11,7 +11,7 @@ export async function deployTicketFixture(): Promise<{ ticket: Ticket; address: 
 
   const ticketFactory = await ethers.getContractFactory("Ticket");
 
-  // public key of the localfhenix debug API
+  // public key of the localLuxFHE debug API
   const ticket = await ticketFactory
     .connect(admin)
     .deploy("test", "test", "http://example.com", "0x3108b60c830cff6f1061460bfa6978744b068e82eb0602cceb9b4e7d80df547d");
@@ -21,7 +21,7 @@ export async function deployTicketFixture(): Promise<{ ticket: Ticket; address: 
 }
 
 export async function getTokensFromFaucet() {
-  if (hre.network.name === "localfhenix") {
+  if (hre.network.name === "localLuxFHE") {
     const signers = await hre.ethers.getSigners();
 
     if ((await hre.ethers.provider.getBalance(signers[0].address)).toString() === "0") {

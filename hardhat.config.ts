@@ -61,7 +61,7 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
 }
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "localfhenix",
+  defaultNetwork: "localLuxFHE",
   namedAccounts: {
     deployer: 0,
   },
@@ -84,12 +84,12 @@ const config: HardhatUserConfig = {
     src: "./contracts",
   },
   networks: {
-    fhenix: {
+    LuxFHE: {
       accounts: { mnemonic },
       chainId: 5432,
-      url: "https://fhenode.fhenix.io/new/evm",
+      url: "https://fhenode.luxfhe.io/new/evm",
     },
-    localfhenix: {
+    localLuxFHE: {
       accounts: { mnemonic, path: "m/44'/60'/0'/0" },
       chainId: 5432,
       url: "http://localhost:8545",
