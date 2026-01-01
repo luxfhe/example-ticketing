@@ -3,12 +3,8 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
-import "fhevm/lib/TFHE.sol";
+import {FHE, euint32, Euint32} from "@luxfi/contracts/fhe/FHE.sol";
 
 contract Ticket is ERC721 {
     string private _baseTokenURI;
@@ -34,27 +30,27 @@ contract Ticket is ERC721 {
         return super.supportsInterface(interfaceId);
     }
 
-    function setPrivateKey(bytes calldata k1) external {
-        _privateKey = TFHE.asEuint32(k1);
+    function setPrivateKey(Euint32 calldata k1) external {
+        _privateKey = FHE.asEuint32(k1);
     }
 
     function mintNft(address to, uint tokenId) external returns (uint256) {
         _mint(to, tokenId);
-
         return tokenId;
     }
 
     function getKeyDebug(bytes32 publicKey) public view returns (bytes memory) {
-        return TFHE.reencrypt(_privateKey, publicKey);
+        return FHE.sealoutput(_privateKey, publicKey);
     }
 
     function getKey() public view returns (bytes memory) {
-        return TFHE.reencrypt(_privateKey, _adminKey);
+        return FHE.sealoutput(_privateKey, _adminKey);
     }
 
     // todo: add eip-712 signatures for user validation
-    function getKeyWithChallenge(bytes calldata challenge) public view returns (bytes memory) {
-        euint32 result = TFHE.xor(_privateKey, TFHE.asEuint32(challenge));
-        return TFHE.reencrypt(result, _adminKey);
+    function getKeyWithChallenge(Euint32 calldata challenge) public returns (bytes memory) {
+        euint32 challengeValue = FHE.asEuint32(challenge);
+        euint32 result = FHE.xor(_privateKey, challengeValue);
+        return FHE.sealoutput(result, _adminKey);
     }
 }
